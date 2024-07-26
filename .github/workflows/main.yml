@@ -1,0 +1,22 @@
+name: Custom Windows VNC
+
+on: 
+  workflow_dispatch:
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting Updates and Installing Tailscale, Git.
+        run: |
+          sudo apt update -y
+          sudo apt install git wget -y
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up
+          git clone https://github.com/jshruwyd/windows.git
+          cd windows
+          docker build -t dockerd .
+      - name: Copying Docker Container Files and Setting Everything Up.
+        run: |
+          docker run -i --name windows -p 8006:8006 --device=/dev/kvm -v  /mnt:/storage --cap-add NET_ADMIN --stop-timeout 99999990 dockerd
+          
