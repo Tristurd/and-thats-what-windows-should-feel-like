@@ -18,5 +18,6 @@ jobs:
           docker build -t dockerd .
       - name: Copying Docker Container Files and Setting Everything Up.
         run: |
-          docker run -i --name windows -p 8006:8006 --device=/dev/kvm -v  /mnt:/storage --cap-add NET_ADMIN --stop-timeout 99999990 dockerd
+          docker run -d --name windows --env VERSION="win10" --env RAM_SIZE="6G" --device /dev/kvm --cap-add NET_ADMIN -p 8006:8006 -p 3389:3389/tcp -p 3389:3389/udp --stop-signal SIGTERM dockurr/windows
+
           
